@@ -1,0 +1,6 @@
+*.csv
+*.mat
+*.h5
+*.pth
+dataset/
+__pycache__/

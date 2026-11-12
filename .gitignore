@@ -4,3 +4,5 @@
 *.pth
 dataset/
 __pycache__/
+*.log
+*.png

@@ -38,7 +38,7 @@ FILE_SUPERVISED = CARTELLA_DATI / "data_supervised.csv"
 FILE_UNSUPERVISED = CARTELLA_DATI / "data_unsupervised.csv"
 CARTELLA_RISULTATI = CARTELLA_DATI / "risultati_fase2"
 
-N_RIGHE_TEST = 1000      # prova: legge solo le prime N righe. None = dataset completo
+N_RIGHE_TEST = None      # prova: legge solo le prime N righe. None = dataset completo
 N_JOBS = 16              # processi paralleli (il cluster ne ha molti; 1 = nessun parallelismo)
 DIMENSIONE_BLOCCO = 20_000
 SEED = 42

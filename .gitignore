@@ -6,3 +6,9 @@ dataset/
 __pycache__/
 *.log
 *.png
+
+.ipynb_checkpoints/
+token*.txt
+*.txt
+*.gz
+logs/

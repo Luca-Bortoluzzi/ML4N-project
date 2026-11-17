@@ -8,7 +8,7 @@
 # |---|---|---|
 # | fase2a_bow | 1.3a, 1.3b, 1.4a | aggregazione per autore, BoW, soglie sul vocabolario |
 # | fase2b_tfidf | 1.3c, 1.3d | TF-IDF (formula della slide 84) e confronto con la BoW |
-# | **fase2c_pca** (questo) | 1.4b | PCA come nel lab_4, PCA senza standardizzazione, TruncatedSVD |
+# | **fase2c_pca** (questo) | 1.4b | PCA come nel lab_4, effetto di standardizzazione e rappresentazione |
 #
 # Fonti: *4_DimensionalityReduction* (criteri per il numero di componenti, dipendenza dalla scala) e
 # dimostrazione della PCA (le componenti sono gli autovettori della matrice di covarianza, la varianza lungo
@@ -20,7 +20,7 @@
 # | 2.3 PCA, varianza cumulativa, scelta delle componenti | §2 |
 # | 2.3 loading score | §3 |
 # | 2.4 correlazione dopo la PCA | §4 |
-# | 2.5 PCA senza standardizzazione | §6 |
+# | 2.5 PCA senza standardizzazione | §6 (un fattore alla volta: prima la scala, poi la rappresentazione) |
 #
 # **Input**: `tfidf.npz`, `bow.npz`, `vocabolario.csv`, `utenti.csv`.
 
@@ -34,7 +34,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from scipy import sparse
-from sklearn.decomposition import PCA, TruncatedSVD
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 CARTELLA = Path(__file__).resolve().parent   # lo script sta in cluster/
@@ -80,8 +80,8 @@ print(f"TF-IDF: {X_tfidf.shape[0]:,} utenti × {X_tfidf.shape[1]:,} parole")
 # portata a media 0 e varianza 1 con `StandardScaler`.
 #
 # La PCA deve **centrare** i dati: una matrice sparsa diventa **densa**. È il problema citato dalla traccia:
-# qui la matrice densa (5.000 × |vocabolario|) entra nella RAM del cluster; per i commenti dell'unsupervised
-# no, e servirà la TruncatedSVD (§7).
+# qui la matrice densa (5.000 × |vocabolario|) entra nella RAM del cluster; con matrici molto più grandi
+# (centinaia di migliaia di commenti) la densificazione diventerebbe il limite.
 
 # float32 dimezza la memoria rispetto a float64 senza perdita di precisione rilevante per la PCA
 X_dense = X_tfidf.toarray().astype(np.float32)
@@ -97,7 +97,7 @@ del X_dense
 # - **Kaiser**: componenti con autovalore > 1 (su dati standardizzati ogni feature ha varianza 1, quindi si
 #   tengono le componenti che spiegano più varianza di una singola parola).
 
-# Calcolo pesante (SVD completa di una matrice 5.000 × |vocabolario|): sul cluster qualche minuto.
+# Calcolo pesante (decomposizione completa di una matrice 5.000 × |vocabolario|): sul cluster qualche minuto.
 t0 = time.perf_counter()
 pca = PCA(random_state=RANDOM_STATE_PCA)
 pca.fit(X_std)
@@ -211,70 +211,121 @@ plt.xlim(limiti(pc_df["PC1"])); plt.ylim(limiti(pc_df["PC2"]))
 plt.title("Utenti proiettati su PC1 e PC2 (assi limitati al 0,5–99,5° percentile)")
 salva_figura("pca_scatter_pc1_pc2_genere")
 
-# ## 6. PCA senza standardizzazione (lab_4, 2.5)
-# Ripetiamo la PCA sulla **BoW grezza** (conteggi non standardizzati). La PCA lavora sulla covarianza, quindi
-# le parole con varianza maggiore (le più frequenti) dominano le prime componenti: lo stesso fenomeno "anomalo"
-# osservato nel lab_4.
+# ## 6. Effetto della standardizzazione e della rappresentazione (lab_4, 2.5)
+# Per attribuire una differenza a una sola causa si cambia **un fattore alla volta**:
+# - §6.1 **sola standardizzazione**: stessa TF-IDF, PCA con e senza `StandardScaler` (come nel lab_4, 2.5,
+#   dove si ripete la PCA sulle stesse feature non standardizzate);
+# - §6.2 **sola rappresentazione**: BoW e TF-IDF, entrambe **non** standardizzate.
+#
+# ### 6.1 Stessa TF-IDF, senza standardizzazione
+# La PCA lavora sulla covarianza: senza standardizzazione le parole con varianza maggiore dominano le prime
+# componenti (il fenomeno "anomalo" del lab_4).
+
+
+def pca_varianza(X_dense: np.ndarray) -> PCA:
+    return PCA(random_state=RANDOM_STATE_PCA).fit(X_dense)
+
+
+def n_per_soglia(cum: np.ndarray) -> int:
+    return int(np.searchsorted(cum, SOGLIA_VARIANZA) + 1)
+
 
 t0 = time.perf_counter()
-X_bow_dense = X_bow.toarray().astype(np.float32)
-pca_raw = PCA(random_state=RANDOM_STATE_PCA).fit(X_bow_dense)
-del X_bow_dense
-print(f"PCA sulla BoW grezza: {time.perf_counter() - t0:.1f} s")
+X_tfidf_dense = X_tfidf.toarray().astype(np.float32)
+varianza_colonne_tfidf = pd.Series(X_tfidf_dense.var(axis=0), index=vocab)
+pca_tfidf_raw = pca_varianza(X_tfidf_dense)
+del X_tfidf_dense
+print(f"PCA sulla TF-IDF non standardizzata: {time.perf_counter() - t0:.1f} s")
 
-cum_raw = np.cumsum(pca_raw.explained_variance_ratio_) * 100
-n_soglia_raw = int(np.searchsorted(cum_raw, SOGLIA_VARIANZA) + 1)
-loading_raw_pc1 = pd.Series(pca_raw.components_[0] * np.sqrt(pca_raw.explained_variance_[0]), index=vocab)
-frequenza_totale = pd.Series(np.asarray(X_bow.sum(axis=0)).ravel(), index=vocab)
-rho = loading_raw_pc1.abs().corr(frequenza_totale, method="spearman")
-print(f"Senza standardizzazione: {n_soglia_raw} componenti per il {SOGLIA_VARIANZA}% (standardizzata: {n_soglia}); "
-      f"PC1 spiega il {cum_raw[0]:.1f}% (standardizzata: {perc_cumul_exp_var[0]:.2f}%)")
-print(f"Spearman tra |loading PC1| e frequenza totale della parola: {rho:.2f}")
+cum_tfidf_raw = np.cumsum(pca_tfidf_raw.explained_variance_ratio_) * 100
+n_soglia_tfidf_raw = n_per_soglia(cum_tfidf_raw)
+loading_tfidf_raw_pc1 = pd.Series(pca_tfidf_raw.components_[0] * np.sqrt(pca_tfidf_raw.explained_variance_[0]), index=vocab)
+rho_var = loading_tfidf_raw_pc1.abs().corr(varianza_colonne_tfidf, method="spearman")
+quota_top10 = 100 * varianza_colonne_tfidf.nlargest(10).sum() / varianza_colonne_tfidf.sum()
+print(f"TF-IDF standardizzata: {n_soglia} componenti per il {SOGLIA_VARIANZA}%, PC1 = {perc_cumul_exp_var[0]:.2f}%")
+print(f"TF-IDF NON standardizzata: {n_soglia_tfidf_raw} componenti per il {SOGLIA_VARIANZA}%, PC1 = {cum_tfidf_raw[0]:.2f}%")
+print(f"Le 10 parole con varianza maggiore portano il {quota_top10:.1f}% della varianza totale della TF-IDF")
+print(f"Spearman tra |loading PC1| (non standardizzata) e varianza della parola: {rho_var:.2f}")
+display(varianza_colonne_tfidf.nlargest(15).round(2).rename("varianza TF-IDF").to_frame())
 
 fig, axes = plt.subplots(1, 2, figsize=(13, 4.8))
 axes[0].plot(np.arange(1, len(perc_cumul_exp_var) + 1), perc_cumul_exp_var, label="TF-IDF standardizzata")
-axes[0].plot(np.arange(1, len(cum_raw) + 1), cum_raw, label="BoW grezza (non standardizzata)")
+axes[0].plot(np.arange(1, len(cum_tfidf_raw) + 1), cum_tfidf_raw, label="TF-IDF non standardizzata")
 axes[0].axhline(SOGLIA_VARIANZA, color="tab:red", ls="--", lw=1)
 axes[0].set_xscale("log")
 axes[0].set_xlabel("# Principal Components (scala log)"); axes[0].set_ylabel("Cumulative explained variance [%]")
-axes[0].set_title("Effetto della standardizzazione sulla PCA"); axes[0].legend()
-sel = loading_raw_pc1.reindex(loading_raw_pc1.abs().sort_values(ascending=False).index[:20]).sort_values()
+axes[0].set_title("Stessa TF-IDF: effetto della sola standardizzazione"); axes[0].legend()
+sel = loading_tfidf_raw_pc1.reindex(loading_tfidf_raw_pc1.abs().sort_values(ascending=False).index[:20]).sort_values()
 sel.plot.barh(ax=axes[1])
 axes[1].set_xscale("symlog")
-axes[1].set_xlabel("Loading PC1 (scala symlog)"); axes[1].set_title("PC1 della BoW grezza — 20 parole con |loading| maggiore")
-salva_figura("pca_senza_standardizzazione")
+axes[1].set_xlabel("Loading PC1 (scala symlog)")
+axes[1].set_title("PC1 della TF-IDF non standardizzata — 20 parole con |loading| maggiore")
+salva_figura("pca_effetto_standardizzazione")
 
-# ## 7. Alternativa per matrici sparse: TruncatedSVD
-# La SVD (citata nelle slide tra le tecniche lineari non supervisionate) **non centra** i dati: lavora sulla
-# matrice sparsa senza renderla densa. Sarà la tecnica da usare sui commenti dell'unsupervised (Sezione 3).
+# ### 6.2 BoW e TF-IDF, entrambe non standardizzate
+# Ora la scala è la stessa condizione (nessuna standardizzazione) e cambia solo la rappresentazione.
+#
+# **Nota importante.** Con la formula della slide la TF-IDF è la BoW con ogni colonna moltiplicata per una
+# costante (l'idf della parola). `StandardScaler` divide ogni colonna per la sua deviazione standard e quindi
+# **annulla quella costante**: BoW standardizzata e TF-IDF standardizzata sono la stessa matrice, e danno la
+# stessa PCA. La differenza tra le due rappresentazioni si vede solo senza standardizzazione (qui sotto).
 
-N_SVD = min(500, X_tfidf.shape[1] - 1)
 t0 = time.perf_counter()
-svd = TruncatedSVD(n_components=N_SVD, random_state=RANDOM_STATE_PCA).fit(X_tfidf)
-print(f"TruncatedSVD ({N_SVD} componenti) sulla matrice sparsa: {time.perf_counter() - t0:.1f} s")
-cum_svd = np.cumsum(svd.explained_variance_ratio_) * 100
+X_bow_dense = X_bow.toarray().astype(np.float32)
+X_bow_std = StandardScaler().fit_transform(X_bow_dense)
+diff_std = float(np.abs(X_bow_std - X_std).max())
+del X_bow_std
+print(f"Differenza massima tra BoW standardizzata e TF-IDF standardizzata: {diff_std:.2e} "
+      "(≈ 0: sono la stessa matrice)")
+pca_bow_raw = pca_varianza(X_bow_dense)
+del X_bow_dense
+print(f"PCA sulla BoW non standardizzata: {time.perf_counter() - t0:.1f} s")
 
-plt.figure(figsize=(8, 4.5))
-plt.plot(np.arange(1, N_SVD + 1), perc_cumul_exp_var[:N_SVD], label="PCA (TF-IDF standardizzata)")
-plt.plot(np.arange(1, N_SVD + 1), cum_svd, label="TruncatedSVD (TF-IDF sparsa, non centrata)")
-plt.xlabel("# Componenti"); plt.ylabel("Cumulative explained variance [%]")
-plt.title(f"PCA vs TruncatedSVD — prime {N_SVD} componenti"); plt.legend()
-salva_figura("pca_vs_svd")
+cum_bow_raw = np.cumsum(pca_bow_raw.explained_variance_ratio_) * 100
+n_soglia_bow_raw = n_per_soglia(cum_bow_raw)
+loading_bow_raw_pc1 = pd.Series(pca_bow_raw.components_[0] * np.sqrt(pca_bow_raw.explained_variance_[0]), index=vocab)
+frequenza_totale = pd.Series(np.asarray(X_bow.sum(axis=0)).ravel(), index=vocab)
+rho_freq = loading_bow_raw_pc1.abs().corr(frequenza_totale, method="spearman")
 
-svd_top = pd.DataFrame({f"SVD comp. {i + 1}": vocab[np.argsort(-np.abs(svd.components_[i]))[:12]] for i in range(4)})
-salva_tabella(svd_top, "svd_top_parole")
-display(svd_top)
+confronto_pca = pd.DataFrame({
+    "matrice": ["TF-IDF standardizzata (= BoW standardizzata)", "TF-IDF non standardizzata", "BoW non standardizzata"],
+    f"componenti per il {SOGLIA_VARIANZA}%": [n_soglia, n_soglia_tfidf_raw, n_soglia_bow_raw],
+    "varianza PC1 [%]": [round(perc_cumul_exp_var[0], 2), round(cum_tfidf_raw[0], 2), round(cum_bow_raw[0], 2)],
+    "parole con |loading PC1| maggiore": [
+        ", ".join(loadings["PC1"].abs().nlargest(8).index),
+        ", ".join(loading_tfidf_raw_pc1.abs().nlargest(8).index),
+        ", ".join(loading_bow_raw_pc1.abs().nlargest(8).index)],
+})
+salva_tabella(confronto_pca, "pca_confronto_scala_rappresentazione")
+print(f"Spearman tra |loading PC1| (BoW non standardizzata) e frequenza totale della parola: {rho_freq:.2f}")
+display(confronto_pca)
+
+plt.figure(figsize=(8, 4.8))
+plt.plot(np.arange(1, len(cum_tfidf_raw) + 1), cum_tfidf_raw, label="TF-IDF non standardizzata")
+plt.plot(np.arange(1, len(cum_bow_raw) + 1), cum_bow_raw, label="BoW non standardizzata")
+plt.plot(np.arange(1, len(perc_cumul_exp_var) + 1), perc_cumul_exp_var, ls="--", label="standardizzata (BoW = TF-IDF)")
+plt.axhline(SOGLIA_VARIANZA, color="tab:red", ls="--", lw=1)
+plt.xscale("log")
+plt.xlabel("# Principal Components (scala log)"); plt.ylabel("Cumulative explained variance [%]")
+plt.title("Effetto della rappresentazione (a parità di scala)"); plt.legend()
+salva_figura("pca_effetto_rappresentazione")
 
 # **✍️ Risposta 1.4b (da completare con i numeri sopra).** Punti da toccare:
-# - **Funziona?** Computazionalmente sì su questo dataset; non sui commenti singoli dell'unsupervised (densità) →
-#   TruncatedSVD. Come compressione: la varianza cresce lentamente, servono molte componenti.
+# - **Funziona?** Computazionalmente sì su questo dataset (matrice densa nella RAM del cluster); su matrici molto
+#   più grandi la densificazione diventerebbe il limite. Come compressione: la varianza cresce lentamente,
+#   servono molte componenti.
 # - **Quante componenti?** Confronta gomito, soglia del 66% e Kaiser e motiva `N_COMPONENTI`.
 # - **Interpretazione fisica:** PC1 (loading quasi tutti positivi, forte correlazione con `n_token`) misura
 #   *quanto scrive* l'utente; le componenti successive sono *argomenti* riconoscibili dalle parole con loading
 #   alto/basso. Oltre le prime decine le componenti mescolano molti argomenti e non sono più interpretabili.
-# - **Scala:** senza standardizzazione la PC1 riflette la frequenza delle parole (lab_4, 2.5).
+# - **Scala (§6.1, stessa TF-IDF):** senza standardizzazione poche parole ad alta varianza dominano la PC1;
+#   la standardizzazione dà a ogni parola lo stesso peso iniziale (lab_4, 2.5).
+# - **Rappresentazione (§6.2):** con la formula della slide BoW e TF-IDF standardizzate coincidono (l'idf è una
+#   costante per colonna, eliminata da StandardScaler); senza standardizzazione la PC1 della BoW segue la
+#   frequenza delle parole, quella della TF-IDF le parole ad alta varianza.
 
 pd.DataFrame([{"N_COMPONENTI": N_COMPONENTI, "varianza_spiegata_%": round(perc_cumul_exp_var[N_COMPONENTI - 1], 2),
-               "n_kaiser": n_kaiser, "n_soglia_66": n_soglia, "n_soglia_66_senza_std": n_soglia_raw}]
+               "n_kaiser": n_kaiser, "n_soglia_66": n_soglia,
+               "n_soglia_66_tfidf_non_std": n_soglia_tfidf_raw, "n_soglia_66_bow_non_std": n_soglia_bow_raw}]
              ).to_csv(TAB / "pca_scelte.csv", index=False)
 print(f"Figure in {FIG}, tabelle in {TAB}")

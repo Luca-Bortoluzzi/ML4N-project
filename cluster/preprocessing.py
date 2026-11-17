@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import html
 import re
+import unicodedata
 from functools import lru_cache
 
 from nltk.stem import PorterStemmer
@@ -30,7 +31,13 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 # Parametri della pulizia (documentarli nella relazione)
 # ----------------------------------------------------------------------
 LUNGHEZZA_MINIMA_TOKEN = 2          # scarta i token di 1 lettera ("s", "t", "u")
-STOP_WORDS = frozenset(ENGLISH_STOP_WORDS)
+
+# Negazioni: la lista di stopword di sklearn le contiene ("not", "no", "never"...).
+# False = comportamento standard delle slide (slide 79: si rimuovono tutte le stopword).
+# True  = le negazioni vengono conservate: utile per confrontare le due pipeline nella Sezione 2.
+MANTIENI_NEGAZIONI = False
+NEGAZIONI = frozenset({"not", "no", "nor", "never", "cannot", "nothing", "nobody", "none", "nowhere", "neither"})
+STOP_WORDS = frozenset(ENGLISH_STOP_WORDS - NEGAZIONI) if MANTIENI_NEGAZIONI else frozenset(ENGLISH_STOP_WORDS)
 
 # Commenti senza contenuto (Reddit li sostituisce con questi segnaposto)
 SEGNAPOSTO_RIMOSSI = frozenset({"[deleted]", "[removed]"})
@@ -43,6 +50,19 @@ _RE_LINK_MARKDOWN = re.compile(r"\[([^\]]*)\]\([^)]*\)")            # [testo](ur
 _RE_URL = re.compile(r"(?:https?://|www\.)\S+", flags=re.IGNORECASE)
 _RE_MENZIONE_UTENTE = re.compile(r"(?<!\w)/?u/[A-Za-z0-9_-]+")      # u/nome, /u/nome
 _RE_APOSTROFI = re.compile(r"[’‘`´]")                              # apostrofi tipografici -> '
+# Contrazioni inglesi: espanse PRIMA della rimozione delle stopword, cosi' "can't" -> "can not",
+# "don't" -> "do not" e le forme senza apostrofo ("dont", "isnt") non finiscono nel vocabolario.
+_CONTRAZIONI = [
+    (re.compile(r"\bwon't\b"), "will not"),
+    (re.compile(r"\bcan't\b"), "can not"),
+    (re.compile(r"\bshan't\b"), "shall not"),
+    (re.compile(r"n't\b"), " not"),
+    (re.compile(r"'re\b"), " are"),
+    (re.compile(r"'ve\b"), " have"),
+    (re.compile(r"'ll\b"), " will"),
+    (re.compile(r"'d\b"), " would"),
+    (re.compile(r"'m\b"), " am"),
+]
 _RE_TOKEN = re.compile(r"[a-z]+(?:'[a-z]+)*")                       # parole alfabetiche, anche "don't"
 
 _STEMMER = PorterStemmer()
@@ -59,26 +79,41 @@ def remove_noise(text: str) -> str:
     return text
 
 
+def strip_accents(text: str) -> str:
+    """Rimuove gli accenti ("résumé" -> "resume"), cosi' la tokenizzazione ASCII
+    non spezza le parole accentate in pezzi ("sum", "caf")."""
+    return "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c))
+
+
+def expand_contractions(text: str) -> str:
+    """Espande le contrazioni inglesi (testo gia' in minuscolo)."""
+    for pattern, sostituzione in _CONTRAZIONI:
+        text = pattern.sub(sostituzione, text)
+    return text
+
+
 def tokenize(text: str) -> list[str]:
     """Tokenizzazione + case normalization (slide 76-78).
 
+    Ordine: minuscolo -> rimozione accenti -> espansione contrazioni -> token.
     Tiene solo sequenze alfabetiche: punteggiatura, numeri, emoji e simboli
-    vengono scartati. Le forme con apostrofo ("don't") restano un token unico,
-    cosi' possono essere confrontate con la lista di stopword.
+    vengono scartati. Il possessivo "'s" resta attaccato e viene tolto in remove_stopwords.
     """
-    return _RE_TOKEN.findall(text.lower())
+    return _RE_TOKEN.findall(expand_contractions(strip_accents(text.lower())))
 
 
 def remove_stopwords(tokens: list[str]) -> list[str]:
     """Stopword removal (slide 79) con la lista inglese di scikit-learn.
 
-    L'apostrofo viene tolto dopo il confronto con la lista ("don't" -> "dont"),
-    poi si scartano i token troppo corti.
+    L'apostrofo residuo (possessivo "john's") viene tolto dopo il confronto
+    con la lista, poi si scartano i token troppo corti.
     """
     out = []
     for tok in tokens:
         if tok in STOP_WORDS:
             continue
+        if tok.endswith("'s"):           # possessivo: "john's" -> "john"
+            tok = tok[:-2]
         tok = tok.replace("'", "")
         if len(tok) >= LUNGHEZZA_MINIMA_TOKEN and tok not in STOP_WORDS:
             out.append(tok)

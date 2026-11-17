@@ -6,7 +6,7 @@ dataset/
 __pycache__/
 *.log
 *.png
-
+*.npz
 .ipynb_checkpoints/
 token*.txt
 *.txt

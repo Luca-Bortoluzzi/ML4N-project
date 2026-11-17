@@ -11,8 +11,9 @@ if [ -f "$HOME/ml4n-env/bin/activate" ]; then
     source "$HOME/ml4n-env/bin/activate"
 fi
 
-# preprocessing.py non si esegue: contiene solo funzioni, importate da fase2_clean.py
-for script in ML4N_phase1.py fase2_clean.py fase2a_bow.py fase2b_tfidf.py fase2c_pca.py; do
+# preprocessing.py e supervised_common.py non si eseguono: contengono solo funzioni
+for script in ML4N_phase1.py fase2_clean.py fase2a_bow.py fase2b_tfidf.py fase2c_pca.py \
+              fase3a_dataset.py fase3b_modelli_default.py fase3c_overfitting.py fase3d_tuning.py; do
     echo "===== $(date '+%H:%M:%S') $script"
     python3 "$script"
 done

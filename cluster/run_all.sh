@@ -13,7 +13,7 @@ fi
 
 # preprocessing.py e supervised_common.py non si eseguono: contengono solo funzioni
 for script in ML4N_phase1.py fase2_clean.py fase2a_bow.py fase2b_tfidf.py fase2c_pca.py \
-              fase3a_dataset.py fase3b_modelli_default.py fase3c_overfitting.py fase3d_tuning.py; do
+              fase3a_dataset.py fase3b_modelli_default.py fase3c_overfitting.py fase3d_tuning.py fase3e_fasce.py; do
     echo "===== $(date '+%H:%M:%S') $script"
     python3 "$script"
 done

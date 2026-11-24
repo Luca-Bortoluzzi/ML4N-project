@@ -1,0 +1,214 @@
+====================================
+Logistic Regression — BoW — training
+====================================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile             2918                3
+vero femminile              94              985
+
+              precision    recall  f1-score   support
+
+    maschile      0.969     0.999     0.984      2921
+   femminile      0.997     0.913     0.953      1079
+
+    accuracy                          0.976      4000
+   macro avg      0.983     0.956     0.968      4000
+weighted avg      0.976     0.976     0.975      4000
+
+
+================================
+Logistic Regression — BoW — test
+================================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile              637               93
+vero femminile             110              160
+
+              precision    recall  f1-score   support
+
+    maschile      0.853     0.873     0.863       730
+   femminile      0.632     0.593     0.612       270
+
+    accuracy                          0.797      1000
+   macro avg      0.743     0.733     0.737      1000
+weighted avg      0.793     0.797     0.795      1000
+
+
+=======================================
+Logistic Regression — TF-IDF — training
+=======================================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile             2921                0
+vero femminile              11             1068
+
+              precision    recall  f1-score   support
+
+    maschile      0.996     1.000     0.998      2921
+   femminile      1.000     0.990     0.995      1079
+
+    accuracy                          0.997      4000
+   macro avg      0.998     0.995     0.996      4000
+weighted avg      0.997     0.997     0.997      4000
+
+
+===================================
+Logistic Regression — TF-IDF — test
+===================================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile              630              100
+vero femminile             104              166
+
+              precision    recall  f1-score   support
+
+    maschile      0.858     0.863     0.861       730
+   femminile      0.624     0.615     0.619       270
+
+    accuracy                          0.796      1000
+   macro avg      0.741     0.739     0.740      1000
+weighted avg      0.795     0.796     0.796      1000
+
+
+===========================
+Linear SVM — BoW — training
+===========================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile             2921                0
+vero femminile               7             1072
+
+              precision    recall  f1-score   support
+
+    maschile      0.998     1.000     0.999      2921
+   femminile      1.000     0.994     0.997      1079
+
+    accuracy                          0.998      4000
+   macro avg      0.999     0.997     0.998      4000
+weighted avg      0.998     0.998     0.998      4000
+
+
+=======================
+Linear SVM — BoW — test
+=======================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile              595              135
+vero femminile              99              171
+
+              precision    recall  f1-score   support
+
+    maschile      0.857     0.815     0.836       730
+   femminile      0.559     0.633     0.594       270
+
+    accuracy                          0.766      1000
+   macro avg      0.708     0.724     0.715      1000
+weighted avg      0.777     0.766     0.770      1000
+
+
+==============================
+Linear SVM — TF-IDF — training
+==============================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile             2921                0
+vero femminile               4             1075
+
+              precision    recall  f1-score   support
+
+    maschile      0.999     1.000     0.999      2921
+   femminile      1.000     0.996     0.998      1079
+
+    accuracy                          0.999      4000
+   macro avg      0.999     0.998     0.999      4000
+weighted avg      0.999     0.999     0.999      4000
+
+
+==========================
+Linear SVM — TF-IDF — test
+==========================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile              576              154
+vero femminile              99              171
+
+              precision    recall  f1-score   support
+
+    maschile      0.853     0.789     0.820       730
+   femminile      0.526     0.633     0.575       270
+
+    accuracy                          0.747      1000
+   macro avg      0.690     0.711     0.697      1000
+weighted avg      0.765     0.747     0.754      1000
+
+
+====================
+kNN — BoW — training
+====================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile             2725              196
+vero femminile             601              478
+
+              precision    recall  f1-score   support
+
+    maschile      0.819     0.933     0.872      2921
+   femminile      0.709     0.443     0.545      1079
+
+    accuracy                          0.801      4000
+   macro avg      0.764     0.688     0.709      4000
+weighted avg      0.790     0.801     0.784      4000
+
+
+================
+kNN — BoW — test
+================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile              631               99
+vero femminile             188               82
+
+              precision    recall  f1-score   support
+
+    maschile      0.770     0.864     0.815       730
+   femminile      0.453     0.304     0.364       270
+
+    accuracy                          0.713      1000
+   macro avg      0.612     0.584     0.589      1000
+weighted avg      0.685     0.713     0.693      1000
+
+
+=======================
+kNN — TF-IDF — training
+=======================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile             2732              189
+vero femminile             615              464
+
+              precision    recall  f1-score   support
+
+    maschile      0.816     0.935     0.872      2921
+   femminile      0.711     0.430     0.536      1079
+
+    accuracy                          0.799      4000
+   macro avg      0.763     0.683     0.704      4000
+weighted avg      0.788     0.799     0.781      4000
+
+
+===================
+kNN — TF-IDF — test
+===================
+Confusion matrix (righe = vero, colonne = predetto; ordine: maschile, femminile)
+                pred. maschile  pred. femminile
+vero maschile              644               86
+vero femminile             184               86
+
+              precision    recall  f1-score   support
+
+    maschile      0.778     0.882     0.827       730
+   femminile      0.500     0.319     0.389       270
+
+    accuracy                          0.730      1000
+   macro avg      0.639     0.600     0.608      1000
+weighted avg      0.703     0.730     0.709      1000

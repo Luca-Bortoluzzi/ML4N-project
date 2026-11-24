@@ -1,0 +1,3 @@
+dataset,righe_lette,duplicati_esatti_rimossi,righe_senza_testo_o_autore,commenti_deleted_removed,commenti_finali,commenti_vuoti_dopo_preprocessing,autori_solo_commenti_vuoti,autori_finali,token_totali,vocabolario_stem_distinti,token_per_commento_media,token_per_commento_mediana,secondi_elaborazione
+supervised,296042,7,0,1,296034,5784,8,5000,4011604,79907,13.82,7.0,15.7
+unsupervised,1107946,256137,7,8,851794,18409,25,14999,11530136,146152,13.84,7.0,37.6

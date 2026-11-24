@@ -1,0 +1,4 @@
+pipeline,macro-F1 training,macro-F1 test,accuracy test,F1 femminile test,tempo training [s]
+Linear SVM (TF-IDF) — SCELTA,0.8427,0.7674,0.803,0.6765,2.93
+Logistic Regression (TF-IDF) — informativo,0.867,0.8041,0.85,0.7093,8.23
+kNN (TF-IDF) — informativo,0.7612,0.7743,0.82,0.6727,2.92

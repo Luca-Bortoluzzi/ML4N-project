@@ -1,0 +1,7 @@
+modello,rappresentazione,training,test,divario (training - test)
+Logistic Regression,BoW,0.968,0.737,0.231
+Logistic Regression,TF-IDF,0.996,0.74,0.257
+Linear SVM,BoW,0.998,0.715,0.283
+Linear SVM,TF-IDF,0.999,0.697,0.301
+kNN,BoW,0.709,0.589,0.12
+kNN,TF-IDF,0.704,0.608,0.096

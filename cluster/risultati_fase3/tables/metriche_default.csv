@@ -1,0 +1,13 @@
+modello,rappresentazione,insieme,accuracy,precision femminile,recall femminile,F1 maschile,F1 femminile,macro-F1,tempo training [s],tempo predizione [s],convergenza
+Logistic Regression,BoW,training,0.9758,0.997,0.9129,0.9837,0.9531,0.9684,35.02,2.54,NO (ConvergenceWarning)
+Logistic Regression,BoW,test,0.797,0.6324,0.5926,0.8626,0.6119,0.7372,35.02,0.5,NO (ConvergenceWarning)
+Logistic Regression,TF-IDF,training,0.9972,1.0,0.9898,0.9981,0.9949,0.9965,36.04,2.49,NO (ConvergenceWarning)
+Logistic Regression,TF-IDF,test,0.796,0.6241,0.6148,0.8607,0.6194,0.74,36.04,0.51,NO (ConvergenceWarning)
+Linear SVM,BoW,training,0.9982,1.0,0.9935,0.9988,0.9967,0.9978,3.12,2.37,si
+Linear SVM,BoW,test,0.766,0.5588,0.6333,0.8357,0.5938,0.7147,3.12,0.5,si
+Linear SVM,TF-IDF,training,0.999,1.0,0.9963,0.9993,0.9981,0.9987,2.93,2.4,si
+Linear SVM,TF-IDF,test,0.747,0.5262,0.6333,0.8199,0.5748,0.6974,2.93,0.51,si
+kNN,BoW,training,0.8007,0.7092,0.443,0.8724,0.5454,0.7089,2.62,3.69,si
+kNN,BoW,test,0.713,0.453,0.3037,0.8147,0.3636,0.5892,2.62,1.0,si
+kNN,TF-IDF,training,0.799,0.7106,0.43,0.8717,0.5358,0.7038,2.85,3.45,si
+kNN,TF-IDF,test,0.73,0.5,0.3185,0.8267,0.3891,0.6079,2.85,0.77,si

@@ -1,0 +1,5 @@
+rappresentazione,max_iter,iterazioni usate,converge,macro-F1 training,macro-F1 test,tempo training [s]
+BoW,100,100,no,0.9684,0.7372,22.95
+BoW,10000,225,si',0.9823,0.7407,32.05
+TF-IDF,100,100,no,0.9965,0.74,10.25
+TF-IDF,10000,141,si',0.9968,0.7311,13.02

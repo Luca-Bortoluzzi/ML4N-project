@@ -1,0 +1,3 @@
+insieme,accuracy,F1 maschile,F1 femminile,macro-F1
+training,0.7302,0.8441,0.0,0.422
+test,0.73,0.8439,0.0,0.422

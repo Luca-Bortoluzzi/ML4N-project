@@ -1,0 +1,22 @@
+modello,rappresentazione,utenti di training,macro-F1 training,dev. std training,macro-F1 validazione,dev. std validazione
+Logistic Regression,tfidf,320,0.9948,0.0034,0.6414,0.0305
+Logistic Regression,tfidf,800,0.9961,0.0019,0.6779,0.0093
+Logistic Regression,tfidf,1280,0.9968,0.0011,0.7062,0.0154
+Logistic Regression,tfidf,1759,0.9964,0.0006,0.7031,0.0174
+Logistic Regression,tfidf,2240,0.9966,0.0005,0.7087,0.0191
+Logistic Regression,tfidf,2720,0.9966,0.0004,0.7127,0.016
+Logistic Regression,tfidf,3200,0.9967,0.0002,0.7164,0.0245
+Linear SVM,bow,320,0.9983,0.0021,0.602,0.0131
+Linear SVM,bow,800,0.9984,0.0014,0.6395,0.0082
+Linear SVM,bow,1280,0.998,0.0011,0.6646,0.0156
+Linear SVM,bow,1759,0.9978,0.0009,0.6733,0.0144
+Linear SVM,bow,2240,0.9977,0.0008,0.6779,0.0184
+Linear SVM,bow,2720,0.998,0.0005,0.6748,0.0222
+Linear SVM,bow,3200,0.998,0.0003,0.6772,0.0181
+kNN,tfidf,320,0.7144,0.1018,0.5437,0.0176
+kNN,tfidf,800,0.698,0.0972,0.5583,0.009
+kNN,tfidf,1280,0.7082,0.0547,0.5571,0.0134
+kNN,tfidf,1759,0.6934,0.0245,0.5604,0.0205
+kNN,tfidf,2240,0.6854,0.0202,0.5618,0.0169
+kNN,tfidf,2720,0.692,0.0209,0.5668,0.0093
+kNN,tfidf,3200,0.7,0.0064,0.5725,0.0099

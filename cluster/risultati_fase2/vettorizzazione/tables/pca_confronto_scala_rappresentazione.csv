@@ -1,0 +1,4 @@
+matrice,componenti per il 66%,varianza PC1 [%],parole con |loading PC1| maggiore
+TF-IDF standardizzata (= BoW standardizzata),353,7.41,"come, did, good, know, make, place, want, sure"
+TF-IDF non standardizzata,29,29.86,"jon, kiss, moan, smile, grin, lick, nod, began"
+BoW non standardizzata,4,48.98,"peopl, think, did, make, want, know, time, look"

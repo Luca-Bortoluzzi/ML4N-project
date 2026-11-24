@@ -1,0 +1,13 @@
+misura,valore
+parole nel vocabolario (fit sul training),"12,272"
+parole nel vocabolario se fit su tutti i 5.000 utenti,"13,509"
+parole in piu' con il fit su tutti (scelte anche grazie al test: leakage evitato),"1,237"
+parole del vocabolario di training assenti nel fit su tutti,0
+"token del test esclusi perche' troppo comuni (just, like) [%]",2.5
+token del test fuori vocabolario perche' rari o mai visti nel training [%],5.0
+matrice di training (utenti x parole),"4,000 x 12,272"
+matrice di test (utenti x parole),"1,000 x 12,272"
+sparsita' training / test [%],97.34 / 97.64
+utenti con vettore vuoto training / test,14 / 2
+idf calcolato su (utenti di training),"4,000"
+idf min / max,0.48 / 5.99

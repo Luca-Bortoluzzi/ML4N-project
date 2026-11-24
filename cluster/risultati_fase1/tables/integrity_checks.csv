@@ -1,0 +1,7 @@
+controllo,valore,esito
+Etichette non valide,0,OK
+Autori duplicati nel target,0,OK
+Autori con etichette conflittuali,0,OK
+Autori supervised senza target,0,OK
+Target senza commenti supervised,0,OK
+Autori in entrambi i dataset,0,OK

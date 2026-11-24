@@ -1,0 +1,6 @@
+criterio,valore
+varianza cumulativa ≥ 66%,353 componenti
+Kaiser (autovalore > 1),1628 componenti (94.3% della varianza)
+varianza della PC1,7.41%
+varianza delle prime 10 PC,17.51%
+varianza delle prime 100 PC,42.59%

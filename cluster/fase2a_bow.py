@@ -8,7 +8,7 @@
 # |---|---|---|
 # | **fase2a_bow** (questo) | 1.3a, 1.3b, 1.4a | aggregazione per autore, BoW, soglie sul vocabolario |
 # | fase2b_tfidf | 1.3c, 1.3d | TF-IDF (formula della slide 84) e confronto con la BoW |
-# | fase2c_pca | 1.4b | PCA come nel lab_4, PCA senza standardizzazione, TruncatedSVD |
+# | fase2c_pca | 1.4b | PCA come nel lab_4 e PCA senza standardizzazione (effetto di scala e rappresentazione) |
 #
 # Fonti del corso usate qui:
 # - **aggregazione**: *3_DataPreProcessing*, slide 40–41; `groupby().agg()` come nel lab_4 (punto 2.1);
@@ -187,11 +187,13 @@ piu_diffuse = (pd.DataFrame({"parola": vocab_full, "utenti": df_t, "quota utenti
 salva_tabella(piu_diffuse, "parole_piu_diffuse")
 display(piu_diffuse)
 
-# **Scelta delle soglie.** Modifica i due valori dopo aver guardato ECDF, grafici e tabelle, e motiva la scelta
-# nella relazione con i numeri delle tabelle (parole tenute, occorrenze conservate, parole eliminate da `MAX_DF`).
+# **Scelta delle soglie.** I valori scelti (motivati nella relazione con le tabelle sopra: parole tenute,
+# occorrenze conservate, parole eliminate da `MAX_DF`) stanno in UN SOLO posto, `supervised_common.py`,
+# cosi' Sezione 1 e Sezione 2 usano sempre gli stessi: MIN_DF = 10 utenti, MAX_DF = 0,7.
+# Nota: qui le soglie sono guardate su tutti i 5.000 utenti (analisi esplorativa). Nella Sezione 2 vengono
+# ri-stimate solo sul training dentro la Pipeline, e la grid search (fase3d) prova anche altri valori.
 
-MIN_DF = 10      # n. minimo di utenti in cui deve comparire una parola
-MAX_DF = 0.5     # frazione massima di utenti (sopra questa quota la parola viene eliminata)
+from supervised_common import MAX_DF, MIN_DF   # MIN_DF: n. minimo di utenti; MAX_DF: quota massima di utenti
 
 bow = CountVectorizer(analyzer=str.split, min_df=MIN_DF, max_df=MAX_DF)
 X_bow = bow.fit_transform(utenti["doc"]).tocsr()
@@ -230,7 +232,7 @@ with pd.option_context("display.max_colwidth", None):
 # **✍️ Risposta 1.4a (da completare con i numeri sopra).** Punti da toccare:
 # - la document frequency ha una coda lunghissima: circa metà delle parole compare in un solo utente;
 # - `MIN_DF` elimina la maggior parte del vocabolario ma una piccola parte delle occorrenze (tabella `vocab_min`);
-# - `MAX_DF` elimina poche parole, quelle usate da più di metà degli utenti (elenco sopra), che non aiutano a
+# - `MAX_DF` elimina poche parole, quelle usate da più del 70% degli utenti (elenco sopra), che non aiutano a
 #   distinguere gli utenti;
 # - risultato: vocabolario ridotto, stessa informazione utile, meno sparsità e meno rumore.
 

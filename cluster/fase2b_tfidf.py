@@ -8,7 +8,7 @@
 # |---|---|---|
 # | fase2a_bow | 1.3a, 1.3b, 1.4a | aggregazione per autore, BoW, soglie sul vocabolario |
 # | **fase2b_tfidf** (questo) | 1.3c, 1.3d | TF-IDF (formula della slide 84) e confronto con la BoW |
-# | fase2c_pca | 1.4b | PCA come nel lab_4, PCA senza standardizzazione, TruncatedSVD |
+# | fase2c_pca | 1.4b | PCA come nel lab_4 e PCA senza standardizzazione (effetto di scala e rappresentazione) |
 #
 # **Fonte**: *3_DataPreProcessing*, slide 83–84. La TF-IDF si calcola con **esattamente la formula della slide**:
 #

@@ -12,7 +12,9 @@ Procedura (8_Metrics_Hyperparameter_tuning, 7_ModelValidationSelection):
 
 Scelta finale: la pipeline con la macro-F1 media di validazione piu' alta; tra le configurazioni la cui
 media cade entro una deviazione standard (tra i fold) dalla migliore, si sceglie quella con il tempo di
-training minore: sono statisticamente indistinguibili, quindi vince la meno costosa.
+training minore. E' una regola EURISTICA, non un test statistico: la deviazione standard tra i fold descrive la
+variabilita' ma non e' un intervallo di confidenza (7_ModelValidationSelection, slide 41). I tempi vengono da
+GridSearchCV con n_jobs = -1 e sono disturbati dai fold in parallelo: fase3f_verifiche.py li rimisura da soli.
 Solo la pipeline scelta viene valutata sul test, una volta.
 
 Esecuzione, dalla cartella cluster/ (dopo fase3a_dataset.py):
@@ -256,8 +258,9 @@ Griglia: {"RIDOTTA (prova)" if RIDOTTA else "completa"}. CV stratificata a 5 fol
 {md(migliori)}
 
 ## Scelta
-Regola: macro-F1 di validazione massima; tra le configurazioni entro una deviazione standard dalla migliore,
-la piu' veloce da addestrare (vedi `tables/tuning_candidate_entro_1std.csv`).
+Regola (euristica): macro-F1 di validazione massima; tra le configurazioni entro una deviazione standard dalla
+migliore, la piu' veloce da addestrare (vedi `tables/tuning_candidate_entro_1std.csv`). La deviazione standard tra
+i fold non e' un intervallo di confidenza; i tempi con n_jobs = -1 sono rimisurati da soli in `report_fase3f.md`.
 
 **Pipeline scelta: {scelta['modello']} con {scelta['rappresentazione']}** — macro-F1 CV {scelta['macro-F1 validazione']:.4f} ± {scelta['dev. std validazione']:.4f}, tempo di training {scelta['tempo training [s]']} s.
 Parametri: `{ {k: (nome_rappresentazione(v) if k == 'tfidf' else v) for k, v in params.items()} }`

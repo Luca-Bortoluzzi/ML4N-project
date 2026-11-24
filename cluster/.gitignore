@@ -1,0 +1,29 @@
+*.csv
+*.mat
+*.h5
+*.pth
+dataset/
+__pycache__/
+*.log
+*.png
+*.npz
+.ipynb_checkpoints/
+token*.txt
+*.txt
+*.gz
+logs/
+
+# requirements.txt va versionato nonostante la regola *.txt
+!requirements.txt
+
+# Risultati essenziali versionati (piccoli): tabelle, figure, report e classification report.
+# I file grandi (CSV preprocessati, matrici .npz, dataset puliti) restano esclusi.
+!cluster/risultati_fase1/tables/*.csv
+!cluster/risultati_fase1/figures/*.png
+!cluster/risultati_fase2/fase2_riepilogo.csv
+!cluster/risultati_fase2/fase2_esempi_*.csv
+!cluster/risultati_fase2/vettorizzazione/tables/*.csv
+!cluster/risultati_fase2/vettorizzazione/figures/*.png
+!cluster/risultati_fase3/tables/*.csv
+!cluster/risultati_fase3/figures/*.png
+!cluster/risultati_fase3/classification_reports_default.txt

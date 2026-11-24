@@ -5,13 +5,14 @@ Griglia: completa. CV stratificata a 5 fold sui 4.000 utenti di training, metric
 ## Migliore configurazione di ogni modello (validazione)
 | modello | rappresentazione | max_df | min_df | C | class_weight | macro-F1 validazione | dev. std validazione | macro-F1 training | accuracy validazione | tempo training [s] | metric | n_neighbors | weights |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Logistic Regression | TF-IDF | 0.7 | 5 | 0.0001 | balanced | 0.7782 | 0.0131 | 0.8694 | 0.8317 | 2.68 | — | — | — |
-| Linear SVM | TF-IDF | 0.7 | 10 | 1e-05 | balanced | 0.7767 | 0.0103 | 0.8541 | 0.8125 | 2.46 | — | — | — |
-| kNN | TF-IDF | 0.7 | 5 | — | — | 0.7462 | 0.0073 | 0.7611 | 0.8108 | 2.4 | cosine | 51 | uniform |
+| Logistic Regression | TF-IDF | 0.7 | 5 | 0.0001 | balanced | 0.7782 | 0.0131 | 0.8694 | 0.8317 | 2.74 | — | — | — |
+| Linear SVM | TF-IDF | 0.7 | 10 | 1e-05 | balanced | 0.7767 | 0.0103 | 0.8541 | 0.8125 | 2.42 | — | — | — |
+| kNN | TF-IDF | 0.7 | 5 | — | — | 0.7462 | 0.0073 | 0.7611 | 0.8108 | 2.43 | cosine | 51 | uniform |
 
 ## Scelta
-Regola: macro-F1 di validazione massima; tra le configurazioni entro una deviazione standard dalla migliore,
-la piu' veloce da addestrare (vedi `tables/tuning_candidate_entro_1std.csv`).
+Regola (euristica): macro-F1 di validazione massima; tra le configurazioni entro una deviazione standard dalla
+migliore, la piu' veloce da addestrare (vedi `tables/tuning_candidate_entro_1std.csv`). La deviazione standard tra
+i fold non e' un intervallo di confidenza; i tempi con n_jobs = -1 sono rimisurati da soli in `report_fase3f.md`.
 
 **Pipeline scelta: Linear SVM con TF-IDF** — macro-F1 CV 0.7710 ± 0.0099, tempo di training 2.38 s.
 Parametri: `{'bow__max_df': 0.5, 'bow__min_df': 20, 'modello__C': 1e-05, 'modello__class_weight': 'balanced', 'tfidf': 'TF-IDF'}`
@@ -19,9 +20,9 @@ Parametri: `{'bow__max_df': 0.5, 'bow__min_df': 20, 'modello__C': 1e-05, 'modell
 ## Valutazione finale sul test (una sola volta)
 | pipeline | macro-F1 training | macro-F1 test | accuracy test | F1 femminile test | tempo training [s] |
 |---|---|---|---|---|---|
-| Linear SVM (TF-IDF) — SCELTA | 0.8427 | 0.7674 | 0.803 | 0.6765 | 2.85 |
-| Logistic Regression (TF-IDF) — informativo | 0.867 | 0.8041 | 0.85 | 0.7093 | 5.26 |
-| kNN (TF-IDF) — informativo | 0.7612 | 0.7743 | 0.82 | 0.6727 | 2.86 |
+| Linear SVM (TF-IDF) — SCELTA | 0.8427 | 0.7674 | 0.803 | 0.6765 | 2.93 |
+| Logistic Regression (TF-IDF) — informativo | 0.867 | 0.8041 | 0.85 | 0.7093 | 8.23 |
+| kNN (TF-IDF) — informativo | 0.7612 | 0.7743 | 0.82 | 0.6727 | 2.92 |
 
 Le righe "informativo" non sono state usate per la scelta. Con i parametri di default la stessa combinazione aveva macro-F1 test 0.697 (punto 2.2a).
 

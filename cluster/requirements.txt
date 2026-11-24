@@ -1,0 +1,12 @@
+# Librerie usate dagli script in cluster/ (versioni minime).
+# Le versioni esatte dell'ambiente del cluster si registrano con, dentro ~/ml4n-env:
+#   pip freeze > requirements-cluster.txt
+# e vengono stampate anche all'inizio del log di run_all.sh.
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.4
+matplotlib>=3.7
+seaborn>=0.12
+joblib>=1.3
+nltk>=3.8

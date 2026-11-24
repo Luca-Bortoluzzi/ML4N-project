@@ -84,7 +84,7 @@ print(f"TF-IDF: {X_tfidf.shape[0]:,} utenti × {X_tfidf.shape[1]:,} parole")
 # (centinaia di migliaia di commenti) la densificazione diventerebbe il limite.
 
 # float32 dimezza la memoria rispetto a float64 senza perdita di precisione rilevante per la PCA
-X_dense = X_tfidf.toarray().astype(np.float32)
+X_dense = X_tfidf.astype(np.float32).toarray()   # float32 prima di densificare: meta' memoria
 mb_sparsa = (X_tfidf.data.nbytes + X_tfidf.indices.nbytes + X_tfidf.indptr.nbytes) / 1e6
 print(f"Matrice densa: {X_dense.nbytes / 1e9:.2f} GB (sparsa: {mb_sparsa:.0f} MB)")
 X_std = StandardScaler().fit_transform(X_dense)
@@ -231,7 +231,7 @@ def n_per_soglia(cum: np.ndarray) -> int:
 
 
 t0 = time.perf_counter()
-X_tfidf_dense = X_tfidf.toarray().astype(np.float32)
+X_tfidf_dense = X_tfidf.astype(np.float32).toarray()
 varianza_colonne_tfidf = pd.Series(X_tfidf_dense.var(axis=0), index=vocab)
 pca_tfidf_raw = pca_varianza(X_tfidf_dense)
 del X_tfidf_dense
@@ -271,7 +271,7 @@ salva_figura("pca_effetto_standardizzazione")
 # stessa PCA. La differenza tra le due rappresentazioni si vede solo senza standardizzazione (qui sotto).
 
 t0 = time.perf_counter()
-X_bow_dense = X_bow.toarray().astype(np.float32)
+X_bow_dense = X_bow.astype(np.float32).toarray()
 X_bow_std = StandardScaler().fit_transform(X_bow_dense)
 diff_std = float(np.abs(X_bow_std - X_std).max())
 del X_bow_std

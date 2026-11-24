@@ -4,14 +4,15 @@
 
 Modelli (tutti trattati nel corso):
   - Logistic Regression  -> loss logistica (6_EmpiricalRiskMinimization, 9_GradientLearning, lab_5)
-  - Linear SVM           -> hinge loss (6_EmpiricalRiskMinimization, 8_Metrics)
-  - k-Nearest Neighbors  -> 5_ThreeComponentsML, lab_2
+  - Linear SVM           -> squared hinge loss, il default di LinearSVC (6_EmpiricalRiskMinimization;
+                            10_SupervisedTechniques, slide 25)
+  - k-Nearest Neighbors  -> nessuna loss, nessun addestramento vero (10_SupervisedTechniques, slide 63-64)
 Ognuno con la configurazione di DEFAULT di scikit-learn (nessun parametro passato): il tuning e' il
 punto 2.2c. Per kNN il default e' la distanza euclidea (metric='minkowski', p=2).
 
 Per ogni combinazione modello x rappresentazione: training sui 4.000 utenti di training (vettorizzazione
 compresa, dentro la Pipeline), valutazione su training E test, confusion matrix e classification report,
-tempo di training e warning di convergenza.
+tempo di training e warning di convergenza (la verifica con max_iter alto e' in fase3f_verifiche.py).
 
 Esecuzione, dalla cartella cluster/ (dopo fase3a_dataset.py):
     python fase3b_modelli_default.py

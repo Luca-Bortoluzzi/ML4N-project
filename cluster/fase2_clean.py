@@ -48,7 +48,9 @@ COLONNE = ["author", "subreddit", "created_utc", "body"]
 def leggi_csv(path: Path) -> pd.DataFrame:
     if not path.is_file():
         raise FileNotFoundError(f"File non trovato: {path}. Correggere CARTELLA_DATI / FILE_*.")
-    df = pd.read_csv(path, nrows=N_RIGHE_TEST, low_memory=False, encoding="utf-8")
+    # Come in ML4N_phase1.py: solo le celle vuote sono mancanti ("None", "NA", "null" restano testo).
+    df = pd.read_csv(path, nrows=N_RIGHE_TEST, low_memory=False, encoding="utf-8",
+                     keep_default_na=False, na_values=[""])
     df.columns = df.columns.str.strip()
     mancanti = set(COLONNE) - set(df.columns)
     if mancanti:

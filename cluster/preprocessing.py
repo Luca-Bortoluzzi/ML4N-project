@@ -50,8 +50,9 @@ _RE_LINK_MARKDOWN = re.compile(r"\[([^\]]*)\]\([^)]*\)")            # [testo](ur
 _RE_URL = re.compile(r"(?:https?://|www\.)\S+", flags=re.IGNORECASE)
 _RE_MENZIONE_UTENTE = re.compile(r"(?<!\w)/?u/[A-Za-z0-9_-]+")      # u/nome, /u/nome
 _RE_APOSTROFI = re.compile(r"[’‘`´]")                              # apostrofi tipografici -> '
-# Contrazioni inglesi: espanse PRIMA della rimozione delle stopword, cosi' "can't" -> "can not",
-# "don't" -> "do not" e le forme senza apostrofo ("dont", "isnt") non finiscono nel vocabolario.
+# Contrazioni inglesi: espanse PRIMA della rimozione delle stopword, cosi' "can't" -> "can not" e
+# "don't" -> "do not" (poi rimossi come stopword). Le regole richiedono l'apostrofo: le forme scritte
+# senza ("dont", "isnt", "cant") NON vengono espanse e restano come token nel vocabolario.
 _CONTRAZIONI = [
     (re.compile(r"\bwon't\b"), "will not"),
     (re.compile(r"\bcan't\b"), "can not"),

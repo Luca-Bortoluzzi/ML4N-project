@@ -37,4 +37,23 @@ di training. Gruppi formati dai 1.000 utenti di test in base al numero di commen
 Confusion matrix per fascia (VN, FP, FN, VP): `tables/prestazioni_per_fascia.csv`. Grafico: `figures/prestazioni_per_fascia.png`.
 
 Attenzione: nelle fasce con pochi utenti (in particolare la classe femminile) le metriche variano molto
-cambiando anche pochi utenti; vanno lette insieme al numero di utenti indicato.
+cambiando anche pochi utenti; vanno lette insieme al numero di utenti indicato. Le fasce contengono anche
+utenti diversi: il confronto tra fasce da solo non dimostra che la causa sia il numero di commenti.
+
+## Esperimento di troncamento (stessi utenti, meno commenti)
+123 utenti di test con più di 100 commenti (35 femminili); per ogni k, 10 sorteggi
+di k commenti per utente. La pipeline non viene riaddestrata.
+
+| commenti tenuti | macro-F1 media | dev. std tra i sorteggi |
+|---|---|---|
+| 1 | 0.616 | 0.041 |
+| 2 | 0.664 | 0.035 |
+| 5 | 0.715 | 0.029 |
+| 10 | 0.783 | 0.023 |
+| 20 | 0.835 | 0.035 |
+| 50 | 0.86 | 0.017 |
+| 100 | 0.868 | 0.01 |
+| tutti | 0.891 | 0.0 |
+
+Se la macro-F1 degli stessi utenti scende quando si tolgono commenti, l'aumento osservato tra le fasce è
+dovuto (almeno in parte) alla quantità di testo e non solo al tipo di utente. Grafico: `figures/troncamento_commenti.png`.

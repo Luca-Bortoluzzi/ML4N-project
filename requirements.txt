@@ -1,4 +1,4 @@
-# Librerie usate dagli script in cluster/ (versioni minime).
+# Librerie usate dagli script in codice/ (versioni minime).
 # Le versioni esatte dell'ambiente del cluster si registrano con, dentro ~/ml4n-env:
 #   pip freeze > requirements-cluster.txt
 # e vengono stampate anche all'inizio del log di run_all.sh.

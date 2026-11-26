@@ -1,38 +1,64 @@
 # ML4N-project
 
 Project of the group I related to the course Machine Learning for Networking.
-Progetto 7: *Patterns in comments from Reddit* (traccia in `7_Reddit/ML4N_project7_reddit.pdf`).
+Progetto 7: *Patterns in comments from Reddit* (traccia in `docs/traccia_progetto7.pdf`).
 
-## Contenuto
+## Struttura
 
-| Percorso | Cosa contiene |
-| --- | --- |
-| `7_Reddit/` | traccia del progetto, scaletta delle operazioni, report di avanzamento |
-| `cluster/` | script Python, uno per passo della traccia, e i loro risultati |
-| `requirements.txt` | librerie Python necessarie |
+```
+ML4N-project/
+├── README.md, requirements.txt, .gitignore
+├── docs/
+│   ├── traccia_progetto7.pdf        traccia del progetto
+│   ├── scaletta_operazioni.docx     scaletta delle operazioni
+│   ├── revisione_tecnica.pdf        revisione tecnica del 24 novembre
+│   └── report_avanzamento.pdf       report di avanzamento (teoria, scelte, risultati)
+└── codice/
+    ├── run_all.sh                   esegue tutti gli script in ordine
+    ├── comune.py                    parametri e pipeline condivisi dalla Sezione 2
+    ├── preprocessing.py             funzioni di preprocessing del testo
+    ├── s1_*.py, s2_*.py             uno script per punto della traccia (tabella sotto)
+    ├── risultati_sezione1/
+    │   ├── esplorazione/            1.1: report, tabelle, figure
+    │   ├── preprocessing/           1.2: commenti preprocessati, riepilogo, esempi
+    │   └── vettorizzazione/         1.3–1.4: BoW, TF-IDF, PCA
+    └── risultati_sezione2/          2.1–2.3: report_s2_*.md, tabelle, figure, pipeline scelta
+```
 
-Script in `cluster/`, nell'ordine in cui `run_all.sh` li esegue:
+Il nome di ogni script dice il punto della traccia (`s2_2c_tuning.py` = Sezione 2, punto 2.2c) e il suo
+report si chiama allo stesso modo (`report_s2_2c.md`).
 
-| Script | Punto della traccia | Cosa fa |
+| Script | Punto | Cosa fa |
 | --- | --- | --- |
-| `ML4N_phase1.py` | 1.1 | esplorazione, duplicati, valori mancanti, controlli sulle etichette |
-| `fase2_clean.py` (+ `preprocessing.py`) | 1.2 | pulizia e preprocessing di tutti i commenti |
-| `fase2a_bow.py` | 1.3a–b, 1.4a | aggregazione per utente, Bag of Words, soglie sul vocabolario |
-| `fase2b_tfidf.py` | 1.3c–d | TF-IDF con la formula delle slide e confronto con la BoW |
-| `fase2c_pca.py` | 1.4b | PCA, criteri per il numero di componenti, loading |
-| `fase3a_dataset.py` | 2.1 | split stratificato 80/20, baseline, vettorizzazione sul solo training |
-| `fase3b_modelli_default.py` | 2.2a | Logistic Regression, Linear SVM e kNN con i parametri di default |
-| `fase3c_overfitting.py` | 2.2b | learning curve e validation curve |
-| `fase3d_tuning.py` | 2.2c | grid search con cross-validation, scelta della pipeline, test finale |
-| `fase3e_fasce.py` | 2.2d | prestazioni per numero di commenti, esperimento di troncamento |
-| `fase3f_verifiche.py` | 2.2a, 2.2c | convergenza della Logistic Regression, tempi misurati senza concorrenza |
+| `s1_1_esplorazione.py` | 1.1 | esplorazione, duplicati, valori mancanti, controlli sulle etichette |
+| `s1_2_preprocessing.py` | 1.2 | pulizia e preprocessing di tutti i commenti (usa `preprocessing.py`) |
+| `s1_3_bow.py` | 1.3a–b, 1.4a | aggregazione per utente, Bag of Words, soglie sul vocabolario |
+| `s1_3_tfidf.py` | 1.3c–d | TF-IDF con la formula delle slide e confronto con la BoW |
+| `s1_4_pca.py` | 1.4b | PCA, criteri per il numero di componenti, loading |
+| `s2_1_dataset.py` | 2.1 | split stratificato 80/20, baseline, vettorizzazione sul solo training |
+| `s2_2a_default.py` | 2.2a | Logistic Regression, Linear SVM e kNN con i parametri di default |
+| `s2_2b_overfitting.py` | 2.2b | learning curve e validation curve |
+| `s2_2c_tuning.py` | 2.2c | grid search con cross-validation, scelta della pipeline, test finale |
+| `s2_2d_fasce.py` | 2.2d | prestazioni per numero di commenti, esperimento di troncamento |
+| `s2_2_verifiche.py` | 2.2a, 2.2c | convergenza della Logistic Regression, tempi misurati senza concorrenza |
+| `s2_3a_subreddit.py` | 2.3a | solo testo, solo subreddit, testo + subreddit |
+| `s2_3b_shortcut.py` | 2.3b | rimozione di subreddit sbilanciati e commenti espliciti, scenario di controllo |
 
-`supervised_common.py` contiene i parametri condivisi (seme, quota di test, soglie `MIN_DF` e `MAX_DF`) e le
-pipeline: tutti gli script li leggono da lì.
+`comune.py` contiene i parametri condivisi (seme, quota di test, soglie `MIN_DF` e `MAX_DF`) e le pipeline:
+tutti gli script della Sezione 2 li leggono da lì.
+
+## Stato
+
+| Sezione | Stato |
+| --- | --- |
+| 1. Esplorazione, preprocessing, vettorizzazione, PCA | completa |
+| 2. Classificazione del genere (2.1–2.3) | completa |
+| 3. Clustering dei commenti | da fare |
+| 4. Sentiment | da fare |
 
 ## Come eseguire
 
-1. Mettere in `cluster/` i tre CSV del progetto: `data_supervised.csv`, `data_unsupervised.csv`,
+1. Mettere in `codice/` i tre CSV del progetto: `data_supervised.csv`, `data_unsupervised.csv`,
    `target_supervised.csv` (non sono nel repository).
 2. Creare l'ambiente e installare le librerie (sul cluster: `~/ml4n-env`, vedi la guida del cluster):
 
@@ -42,7 +68,7 @@ pipeline: tutti gli script li leggono da lì.
    pip install -r requirements.txt
    ```
 
-3. Eseguire tutto, dalla cartella `cluster/`:
+3. Eseguire tutto, dalla cartella `codice/`:
 
    ```bash
    nohup ./run_all.sh > log_run_all.txt 2>&1 &
@@ -50,16 +76,16 @@ pipeline: tutti gli script li leggono da lì.
    ```
 
    Il log riporta all'inizio le versioni delle librerie. Per registrare l'ambiente esatto:
-   `pip freeze > requirements-cluster.txt`.
+   `pip freeze > requirements-cluster.txt`. Un singolo punto si riesegue con il suo script, per esempio
+   `python3 s2_3b_shortcut.py`, purché i passi precedenti abbiano già prodotto i loro file.
 
-Ogni script scrive tabelle, figure e un report markdown in `cluster/risultati_fase1/`, `risultati_fase2/` e
-`risultati_fase3/`. Nel repository sono versionati i report, le tabelle e le figure; i file grandi (commenti
-preprocessati, matrici, dataset puliti) si rigenerano con `run_all.sh`.
+Nel repository sono versionati i report, le tabelle e le figure; i file grandi (commenti preprocessati,
+matrici, dataset puliti, split) si rigenerano con `run_all.sh`.
 
 ## Riproducibilità
 
-- Tutti i passaggi casuali hanno un seme fisso: 42 per split e cross-validation, 15 per la PCA.
-- `cluster/risultati_fase3/pipeline_migliore.joblib` è la pipeline scelta nel punto 2.2c, addestrata sui
-  4.000 utenti di training. Si rigenera con `fase3d_tuning.py` e va riletta con la stessa versione di
+- Tutti i passaggi casuali hanno un seme fisso: 42 per split, cross-validation e campionamenti, 15 per la PCA.
+- `codice/risultati_sezione2/pipeline_migliore.joblib` è la pipeline scelta nel punto 2.2c, addestrata sui
+  4.000 utenti di training. Si rigenera con `s2_2c_tuning.py` e va riletta con la stessa versione di
   scikit-learn con cui è stata salvata.
 - Lo stemming usa `PorterStemmer` di nltk: con un'altra versione alcune radici possono cambiare.

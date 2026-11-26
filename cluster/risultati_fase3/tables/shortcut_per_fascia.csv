@@ -1,0 +1,26 @@
+scenario,fascia,utenti,femminile,macro-F1
+nessuna rimozione,1-5,248,67,0.593
+nessuna rimozione,6-20,261,77,0.787
+nessuna rimozione,21-100,316,72,0.859
+nessuna rimozione,>100,123,35,0.891
+nessuna rimozione,tutti,948,251,0.769
+senza subreddit sbilanciati,1-5,248,67,0.541
+senza subreddit sbilanciati,6-20,261,77,0.721
+senza subreddit sbilanciati,21-100,316,72,0.805
+senza subreddit sbilanciati,>100,123,35,0.873
+senza subreddit sbilanciati,tutti,948,251,0.718
+senza commenti espliciti,1-5,248,67,0.561
+senza commenti espliciti,6-20,261,77,0.778
+senza commenti espliciti,21-100,316,72,0.842
+senza commenti espliciti,>100,123,35,0.882
+senza commenti espliciti,tutti,948,251,0.752
+senza entrambi,1-5,248,67,0.539
+senza entrambi,6-20,261,77,0.712
+senza entrambi,21-100,316,72,0.773
+senza entrambi,>100,123,35,0.873
+senza entrambi,tutti,948,251,0.705
+controllo: stessi commenti tolti a caso,1-5,248,67,0.599
+controllo: stessi commenti tolti a caso,6-20,261,77,0.754
+controllo: stessi commenti tolti a caso,21-100,316,72,0.842
+controllo: stessi commenti tolti a caso,>100,123,35,0.882
+controllo: stessi commenti tolti a caso,tutti,948,251,0.756

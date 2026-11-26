@@ -1,0 +1,6 @@
+scenario,commenti tolti,quota commenti tolti,utenti training,utenti test,macro-F1 CV,dev. std CV,macro-F1 test,accuracy test,F1 femminile test,tempo training [s],iterazioni,converge,differenza test,macro-F1 test (utenti comuni)
+nessuna rimozione,0,0.0,4000,1000,0.771,0.0099,0.7674,0.803,0.6765,2.95,21,si',0.0,0.769
+senza subreddit sbilanciati,91568,0.3093,3795,948,0.7059,0.0118,0.7182,0.7532,0.6189,2.0,22,si',-0.0492,0.718
+senza commenti espliciti,2362,0.008,3996,999,0.7611,0.0163,0.7525,0.7878,0.6592,2.86,21,si',-0.0149,0.752
+senza entrambi,93103,0.3145,3788,948,0.6936,0.0128,0.7047,0.7405,0.6019,2.02,20,si',-0.0627,0.705
+controllo: stessi commenti tolti a caso,93103,0.3145,3788,948,0.7314,0.0128,0.7562,0.789,0.6667,2.03,21,si',-0.0112,0.756

@@ -1,0 +1,4 @@
+feature,iperparametri,macro-F1 CV,dev. std CV,macro-F1 training,macro-F1 test,accuracy test,F1 femminile test,tempo training [s],iterazioni,converge
+solo testo,come nel 2.2c,0.771,0.0099,0.8427,0.7674,0.803,0.6765,2.95,20,si'
+solo subreddit,"min_utenti = 2, C = 1, non standardizzate",0.7679,0.0125,0.8584,0.7581,0.802,0.6551,0.4,6,si'
+testo + subreddit,"min_utenti = 10, C = 1e-05",0.7912,0.0063,0.891,0.7865,0.82,0.702,3.34,12,si'

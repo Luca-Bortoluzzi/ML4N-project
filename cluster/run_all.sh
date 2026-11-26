@@ -17,7 +17,7 @@ python3 -c "import sys, numpy, pandas, scipy, sklearn, matplotlib, nltk; print('
 
 for script in ML4N_phase1.py fase2_clean.py fase2a_bow.py fase2b_tfidf.py fase2c_pca.py \
               fase3a_dataset.py fase3b_modelli_default.py fase3c_overfitting.py fase3d_tuning.py fase3e_fasce.py \
-              fase3f_verifiche.py; do
+              fase3f_verifiche.py fase3g_subreddit.py; do
     echo "===== $(date '+%H:%M:%S') $script"
     python3 "$script"
 done
